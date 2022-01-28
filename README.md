@@ -18,6 +18,6 @@
   
   python Captcha.py
 
-  new file will genarate at sampleCaptchas/output/output100.txt  for sampleCaptchas/inpu/input100.txt 
+  new file will genarate at sampleCaptchas/output/output100.txt  for sampleCaptchas/inpu/input100.jpg 
 
 
