@@ -34,7 +34,7 @@ class Captcha(object):
 
         with open(save_path, 'w') as f:
             f.write(''.join(ch_list))
-        print(''.join(ch_list))
+        #print(''.join(ch_list))
 
 
     def infer_char_from_morph(morph):
@@ -45,6 +45,7 @@ class Captcha(object):
         return: the inference character
         """
         for ch in Captcha.chars_morph_map:
+            # check if the morph is same as any morph for the character
             if any((morph_x == morph).all() for morph_x in  Captcha.chars_morph_map[ch]):
                 return ch
         return None
@@ -65,11 +66,9 @@ class Captcha(object):
 
             #slice image array only with R value, the values for RGB are same for these image data.
             data_r = data_rgb[:, :, 0]
-            # print(data_r)
 
             # remove the frame area
             data_display = data_r[11:21, 5:50]
-            # print(data_display)
 
             # As background texture color values are all greater than 100
             # remove the background texture,  set as False (white)
