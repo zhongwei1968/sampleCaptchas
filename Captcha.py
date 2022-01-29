@@ -5,7 +5,7 @@ from PIL import Image
 
 class Captcha(object):
 
-    # static variable to store character morphology map
+    # static variable to store character morphology mapping dictionary
     chars_morph_map = None
 
     def __init__(self):
@@ -84,6 +84,12 @@ class Captcha(object):
         return char_morphs
 
     def load_chars_morph_data(data_path):
+        """
+        algo to load and process all the text and image training files, generate character morphologies mapping
+        args:
+            data_path: path to store the input and output files of sampleCaptchas data
+        return: character morphologies mapping dictionary
+        """
         chars_morph_map = {}
 
         # read the image training samples one by one
@@ -117,3 +123,4 @@ class Captcha(object):
 if __name__ == "__main__":
     my_captcha = Captcha()
     my_captcha('input/input100.jpg', 'output/output100.txt')
+    print('testing finished, please see the result at output/output100.txt')
