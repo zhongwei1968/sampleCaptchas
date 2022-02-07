@@ -11,6 +11,7 @@
   install python 3 in the system if not install before.
 
   install pillow package in python 3 if not install before:  pip install pillow
+  install scikit-learn package in python 3 if not install before: pip install scikit-learn
 
 3. run Captcha.py:
 
