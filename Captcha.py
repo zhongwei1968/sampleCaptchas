@@ -2,20 +2,41 @@ import os
 import numpy as np
 # load an image with Pillow
 from PIL import Image
+# use Multinomial Naive Bayes classifier to train the model
+from sklearn.naive_bayes import MultinomialNB
 
 class Captcha(object):
 
     # static variable to store character morphology mapping dictionary
     chars_morph_map = None
+    # static variable to store Multinomial Naive Bayes classifier model
+    captcha_clf = None
 
     def __init__(self):
-        # load character morphologies only one time
+        # load training sample and train the model only one time
         if Captcha.chars_morph_map is None:
             # get current script directory
             script = os.path.realpath(__file__)
             dirname = os.path.dirname(script)
             # the input and output of sampleCaptchas are stored at current script directory
             Captcha.chars_morph_map = Captcha.load_chars_morph_data(dirname)
+
+            # load the training samples, input morph features and outputs
+            x_morph_features = []
+            y_chars = []
+
+            for chars_morph in Captcha.chars_morph_map:
+                for morph in Captcha.chars_morph_map[chars_morph]:
+                    x_morph_features.append(morph.flatten())
+                    y_chars.append(chars_morph)
+
+            # convert list to numpy array
+            x_morph_features_array = np.array(x_morph_features)
+            y_chars_array = np.array(y_chars)
+
+            # initial MultinomialNB model, and train the model
+            Captcha.captcha_clf = MultinomialNB()
+            Captcha.captcha_clf.fit(x_morph_features_array, y_chars_array)
 
     def __call__(self, im_path, save_path):
         """
@@ -24,17 +45,24 @@ class Captcha(object):
             im_path: .jpg image path to load and to infer
             save_path: output file path to save the one-line outcome
         """
+
+        # load the test image file, get morph features
         morphs_read = Captcha.read_morphs_from_image(im_path)
 
-        ch_list = []
+        x_morph_features = []
         for morph in morphs_read:
-            ch = Captcha.infer_char_from_morph(morph)
-            if ch:
-                ch_list.append(ch)
+                x_morph_features.append(morph.flatten())
+
+        # convert list to numpy array
+        x_morph_features_array = np.array(x_morph_features)
+
+        # call the model to predict
+        chars_pre = Captcha.captcha_clf.predict(x_morph_features_array)
+        ch_list = chars_pre.tolist()
 
         with open(save_path, 'w') as f:
             f.write(''.join(ch_list))
-        #print(''.join(ch_list))
+        print(''.join(ch_list))
 
 
     def infer_char_from_morph(morph):
