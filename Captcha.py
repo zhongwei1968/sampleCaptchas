@@ -62,7 +62,7 @@ class Captcha(object):
 
         with open(save_path, 'w') as f:
             f.write(''.join(ch_list))
-        print(''.join(ch_list))
+        #print(''.join(ch_list))
 
 
     def infer_char_from_morph(morph):
